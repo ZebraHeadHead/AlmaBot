@@ -28,13 +28,12 @@ def getList(website):
     cols = driver.find_elements(
         By.XPATH, "//div[@class='row']/div[@class='col-sm-4']")
 
-    for i in range(1, 4):
-        print(cols[i].text + "\n")
-
+    result = [cols[i].text for i in range(1, 4)]
     driver.quit()
+    return result
 
 
-def findItem():
+def findItemNames(ui_entry, output_label):
     script_dir = os.path.dirname(os.path.abspath(__file__))
     file_path = os.path.join(script_dir, "Material.csv")
 
@@ -48,25 +47,26 @@ def findItem():
 
         while True:
             # Get user input
-            user_input = input("Enter a search term: ").strip()
+            user_input = ui_entry.strip()
 
             if user_input:
                 # Find matches (case-insensitive partial match)
                 matches = [item for item in data if user_input.lower()
                            in item.lower()]
                 if len(matches) > 3:
-                    print("Too vague, please try to be more specific")
+                    output_label.config(
+                        "Too vague, please try to be more specific")
                 elif matches:
-                    print("Matching results:")
+                    output_text = "Matching results:\n"
                     for match in matches:
-                        print(f"-{match}")
-                        output_list.append(f"{match}")
+                        output_text += f"- {match}\n"
+                        output_list.append(match)
                     return output_list  # return the list that will be used for making websites
 
                 else:
-                    print("No matches found. Try again.")
+                    output_label.config("No matches found. Try again.")
             else:
-                print("Please enter a valid search term.")
+                output_label.config("Please enter a valid search term.")
 
 
 def namesIntoLinks(input: List[str]):
@@ -77,3 +77,10 @@ def namesIntoLinks(input: List[str]):
         links.append(address)
     # print(links)
     return links
+
+# for testing
+
+
+def runAll():
+    for i in namesIntoLinks(findItemNames()):
+        getList(i)
