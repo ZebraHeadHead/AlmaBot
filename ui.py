@@ -44,7 +44,7 @@ output_frame = tk.Frame(root)
 output_frame.pack(pady=10)
 
 for i in range(10):
-    output_frame.grid_rowconfigure(i, weight=1, uniform="equal")
+    output_frame.grid_rowconfigure(i, weight=1)
 
 # Run the application
 root.mainloop()
